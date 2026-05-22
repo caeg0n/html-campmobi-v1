@@ -233,6 +233,15 @@
     </div>
   </div>
 
+  <div class="card" onclick="openLightbox('04d_whatsapp_login.png','Vamos Começar — Login com WhatsApp','Tela de acesso após o onboarding. Permite continuar como passageiro via WhatsApp ou acessar o painel do motorista.')">
+    <div class="thumb-wrap"><img src="04d_whatsapp_login.png" alt="Vamos Começar" /></div>
+    <div class="card-body">
+      <span class="screen-tag">Onboarding</span>
+      <h3>Vamos Começar</h3>
+      <p>Acesso via WhatsApp como passageiro ou entrada no painel do motorista.</p>
+    </div>
+  </div>
+
   <div class="card" onclick="openLightbox('05_home.png','Seleção de Acesso','Tela de entrada após autenticação. Permite ao usuário continuar como passageiro ou acessar o painel do motorista.')">
     <div class="thumb-wrap"><img src="05_home.png" alt="Vamos começar" /></div>
     <div class="card-body">
@@ -406,24 +415,91 @@
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-nav lightbox-prev" onclick="navigate(-1)">&#8249;</button>
+  <button class="lightbox-nav lightbox-next" onclick="navigate(1)">&#8250;</button>
   <img id="lightbox-img" src="" alt="" />
   <div class="lightbox-caption" id="lightbox-title"></div>
   <div class="lightbox-sub" id="lightbox-desc"></div>
+  <div class="lightbox-counter" id="lightbox-counter"></div>
 </div>
 
+<style>
+  .lightbox-nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: #fff;
+    font-size: 44px;
+    width: 52px;
+    height: 72px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    z-index: 1001;
+    line-height: 1;
+    padding: 0;
+  }
+  .lightbox-nav:hover { background: rgba(255,255,255,0.28); }
+  .lightbox-prev { left: 16px; }
+  .lightbox-next { right: 16px; }
+  .lightbox-counter {
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    margin-top: 8px;
+    text-align: center;
+  }
+</style>
+
 <script>
+  let slides = [];
+  let currentIndex = 0;
+
+  function buildSlides() {
+    slides = Array.from(document.querySelectorAll('.card')).map(card => {
+      const onclick = card.getAttribute('onclick') || '';
+      const match = onclick.match(/openLightbox\('([^']+)',\s*'([^']+)',\s*'([^']+)'\)/);
+      return match ? { src: match[1], title: match[2], desc: match[3] } : null;
+    }).filter(Boolean);
+  }
+
+  function showSlide(index) {
+    const s = slides[index];
+    document.getElementById('lightbox-img').src = s.src;
+    document.getElementById('lightbox-title').textContent = s.title;
+    document.getElementById('lightbox-desc').textContent = s.desc;
+    document.getElementById('lightbox-counter').textContent = `${index + 1} / ${slides.length}`;
+    currentIndex = index;
+  }
+
   function openLightbox(src, title, desc) {
-    document.getElementById('lightbox-img').src = src;
-    document.getElementById('lightbox-title').textContent = title;
-    document.getElementById('lightbox-desc').textContent = desc;
+    if (!slides.length) buildSlides();
+    const idx = slides.findIndex(s => s.src === src);
+    currentIndex = idx >= 0 ? idx : 0;
+    showSlide(currentIndex);
     document.getElementById('lightbox').classList.add('open');
   }
+
+  function navigate(dir) {
+    currentIndex = (currentIndex + dir + slides.length) % slides.length;
+    showSlide(currentIndex);
+  }
+
   function closeLightbox(e) {
     if (!e || e.target === document.getElementById('lightbox') || e.target.classList.contains('lightbox-close')) {
       document.getElementById('lightbox').classList.remove('open');
     }
   }
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') navigate(1);
+    if (e.key === 'ArrowLeft') navigate(-1);
+  });
 </script>
 
 </body>
