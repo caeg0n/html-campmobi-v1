@@ -31,14 +31,54 @@
       margin-top: 4px;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 24px;
-      padding: 32px 40px;
+    .gallery {
       max-width: 1200px;
       margin: 0 auto;
+      padding: 16px 0 40px;
     }
+    .group { margin-top: 8px; }
+
+    .carousel-wrap { position: relative; }
+    .carousel {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      scroll-behavior: smooth;
+      padding: 16px 40px;
+      scrollbar-width: thin;
+      scrollbar-color: #FEBB22 transparent;
+    }
+    .carousel::-webkit-scrollbar { height: 8px; }
+    .carousel::-webkit-scrollbar-thumb { background: #FEBB22; border-radius: 4px; }
+    .carousel::-webkit-scrollbar-track { background: transparent; }
+    .carousel .card {
+      flex: 0 0 200px;
+      scroll-snap-align: start;
+    }
+
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 5;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+      color: #212121;
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .carousel-btn:hover { background: #FEBB22; }
+    .carousel-btn.prev { left: 8px; }
+    .carousel-btn.next { right: 8px; }
 
     .card {
       background: #fff;
@@ -172,11 +212,11 @@
     .lightbox-close:hover { background: rgba(255,255,255,0.28); }
 
     .section-label {
-      grid-column: 1 / -1;
       display: flex;
       align-items: center;
       gap: 12px;
       margin-top: 8px;
+      padding: 0 40px;
     }
     .section-label span {
       font-size: 11px;
@@ -201,10 +241,14 @@
   <p>Clique em qualquer tela para visualizar em tamanho real</p>
 </header>
 
-<div class="grid">
+<div class="gallery">
 
-  <!-- Splash -->
-  <div class="section-label"><span>Splash</span></div>
+  <!-- Onboarding -->
+  <section class="group">
+  <div class="section-label"><span>Onboarding</span></div>
+  <div class="carousel-wrap">
+  <button class="carousel-btn prev" onclick="scrollCarousel(this,-1)">&#8249;</button>
+  <div class="carousel">
 
   <div class="card" onclick="openLightbox('00_splash.png','Splash — Camp Mobi','Tela inicial de abertura do app. Exibe o logo Camp Mobi com animação de pulso, a versão v1.0.6 e o indicador de carregamento enquanto o app é inicializado.')">
     <div class="thumb-wrap"><img src="00_splash.png" alt="Splash" /></div>
@@ -214,9 +258,6 @@
       <p>Tela de abertura com logo, versão e indicador de carregamento na inicialização.</p>
     </div>
   </div>
-
-  <!-- Onboarding -->
-  <div class="section-label"><span>Onboarding</span></div>
 
   <div class="card" onclick="openLightbox('04_onboarding.png','Onboarding — Selecione o Local','Tela de onboarding apresentando as funcionalidades do app. Exibe ilustração, título e botão Próximo para avançar pelos slides.')">
     <div class="thumb-wrap"><img src="04_onboarding.png" alt="Onboarding" /></div>
@@ -263,8 +304,17 @@
     </div>
   </div>
 
+  </div>
+  <button class="carousel-btn next" onclick="scrollCarousel(this,1)">&#8250;</button>
+  </div>
+  </section>
+
   <!-- Passageiro -->
+  <section class="group">
   <div class="section-label"><span>Passageiro</span></div>
+  <div class="carousel-wrap">
+  <button class="carousel-btn prev" onclick="scrollCarousel(this,-1)">&#8249;</button>
+  <div class="carousel">
 
   <div class="card" onclick="openLightbox('06_mapa.png','Mapa Principal — Passageiro','Tela principal do passageiro com mapa em tempo real, localização atual e botão para confirmar o ponto de embarque antes de solicitar uma corrida.')">
     <div class="thumb-wrap"><img src="06_mapa.png" alt="Mapa" /></div>
@@ -320,15 +370,6 @@
     </div>
   </div>
 
-  <div class="card" onclick="openLightbox('12_motorista_aceitou.png','Motorista Aceitou','Bottom sheet exibindo motoristas que aceitaram a solicitação. Mostra foto, nome, avaliação, veículo e placa. Passageiro pode aceitar ou recusar o motorista.')">
-    <div class="thumb-wrap"><img src="12_motorista_aceitou.png" alt="Motorista Aceitou" /></div>
-    <div class="card-body">
-      <span class="screen-tag">Passageiro</span>
-      <h3>Motorista Aceitou</h3>
-      <p>Motorista disponível com foto, avaliação e veículo para o passageiro confirmar.</p>
-    </div>
-  </div>
-
   <div class="card" onclick="openLightbox('13_corrida_em_andamento.png','Corrida em Andamento','Mapa em tempo real mostrando a rota da corrida em andamento. Exibe status da corrida e botão de chat com o motorista.')">
     <div class="thumb-wrap"><img src="13_corrida_em_andamento.png" alt="Corrida em Andamento" /></div>
     <div class="card-body">
@@ -365,8 +406,17 @@
     </div>
   </div>
 
+  </div>
+  <button class="carousel-btn next" onclick="scrollCarousel(this,1)">&#8250;</button>
+  </div>
+  </section>
+
   <!-- Motorista -->
+  <section class="group">
   <div class="section-label"><span>Motorista</span></div>
+  <div class="carousel-wrap">
+  <button class="carousel-btn prev" onclick="scrollCarousel(this,-1)">&#8249;</button>
+  <div class="carousel">
 
   <div class="card" onclick="openLightbox('01_solicitacoes.png','Solicitações do Motorista','Painel principal do motorista. Exibe o status de conexão, veículos selecionados com disponibilidade e animação de espera por novas corridas.')">
     <div class="thumb-wrap"><img src="01_solicitacoes.png" alt="Solicitações" /></div>
@@ -422,6 +472,11 @@
     </div>
   </div>
 
+  </div>
+  <button class="carousel-btn next" onclick="scrollCarousel(this,1)">&#8250;</button>
+  </div>
+  </section>
+
 </div>
 
 <!-- Lightbox -->
@@ -468,6 +523,12 @@
 </style>
 
 <script>
+  function scrollCarousel(btn, dir) {
+    const carousel = btn.parentElement.querySelector('.carousel');
+    if (!carousel) return;
+    carousel.scrollBy({ left: dir * carousel.clientWidth * 0.8, behavior: 'smooth' });
+  }
+
   let slides = [];
   let currentIndex = 0;
 
